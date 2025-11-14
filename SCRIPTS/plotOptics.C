@@ -14,7 +14,7 @@ void plotOptics(int nrun, int nEvent, int foilPOS){
   cout << foilmax << " is upper foilcut" << endl;
 
   //here's the cut
-  TCut cut = Form("H.react.z>%i&&H.react.z<%i&&abs(H.gtr.dp)<10&&H.cal.etracknorm>0.65&&H.cer.npeSum>6",foilmin,foilmax);
+  TCut cut = Form("H.react.z>%i&&H.react.z<%i&&abs(H.gtr.dp)<8&&H.cal.etracknorm>0.65&&H.cer.npeSum>6",foilmin,foilmax);
   TCut cutCentral = "H.extcor.xsieve<1&&H.extcor.xsieve>-2&&abs(H.extcor.ysieve)<0.6";
   TCut edgeCut = "H.extcor.xsieve<1&&H.extcor.xsieve>-2&&H.extcor.ysieve<-4.8&&H.extcor.ysieve>-5.8";
 
@@ -34,21 +34,21 @@ void plotOptics(int nrun, int nEvent, int foilPOS){
 
 
   //make the plots
-  TH1F *h_z = new TH1F("h_z",";H.react.z [cm]",100,-14,14);
+  TH1F *h_z = new TH1F("h_z",";zVertex (H.react.z) [cm]",100,-14,14);
   TH1F *h_xsieve = new TH1F("h_xsieve",";xSieve[cm]",200,-12.0,12.0); 
   TH1F *h_ysieve = new TH1F("h_ysieve",";ySieve[cm]",200,-7.0,7.0);
-  TH2F *h2_ypVz = new TH2F("h2_ypVz",";zVertex [cm];ypTar",100,-14,14,100,-0.05,0.05);
+  TH2F *h2_ypVz = new TH2F("h2_ypVz",";zVertex (react.z) [cm];ypTar",100,-14,14,100,-0.05,0.05);
   TH2F *h2_ypVy = new TH2F("h2_ypVy",";yTar [cm];ypTar",100,-5,5,100,-0.05,0.05);
   TH2F *h2_yfpVxfp = new TH2F("h2_yfpVxfp",";xfp [cm];yfp [cm]",100,0,8,100,-10,10);
-  TH2F *h2_dpVz = new TH2F("h2_dpVz",";zVertex [cm];delta",100,-14,14,100,-12,12);
+  TH2F *h2_dpVz = new TH2F("h2_dpVz",";zVertex  (react.z) [cm];delta",100,-14,14,100,-12,12);
   TH2F *h2_sieve = new TH2F("h2_sieve",";ySieve [cm];xSieve[cm]",200,-7.0,7.0,200,-12.0,12.0);
   TH2F *h2_xpVd = new TH2F("h2_xpVd",";delta;xpfp",100,-12,12,100,-0.15,0.15);
   TH2F *h2_kinW = new TH2F("h2_kinW",";H.kin.W;H.gtr.dp",100,0,5,100,-12,12);  
 
   //plots with central hole only (central title; x title; y title)
   TH1F *h_z_c = new TH1F("h_z_c","central sieve hole;P.react.z [cm]",100,-14,14);
-  TH2F *h2_ypVz_c = new TH2F("h2_ypVz_c","central sieve hole;zVertex [cm];ypTar",100,-14,14,100,-0.05,0.05);
-  TH2F *h2_dpVz_c = new TH2F("h2_dpVz_c","central sieve hole;zVertex [cm];delta",100,-14,14,100,-12,12);
+  TH2F *h2_ypVz_c = new TH2F("h2_ypVz_c","central sieve hole;zVertex (react.z) [cm];ypTar",100,-14,14,100,-0.05,0.05);
+  TH2F *h2_dpVz_c = new TH2F("h2_dpVz_c","central sieve hole;zVertex (react.z)[cm];delta",100,-14,14,100,-12,12);
   TH2F *h2_ypVy_c = new TH2F("h2_ypVy_c","central sieve hole;yTar [cm];ypTar",100,-5,5,100,-0.05,0.05);
   TH2F *h2_yfpVxfp_c = new TH2F("h2_yfpVxfp_c","central sieve hole;xfp [cm];yfp [cm]",100,0,8,100,-10,10);
 

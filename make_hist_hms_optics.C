@@ -98,8 +98,11 @@ gStyle->SetPalette(1,0);
  //
   TString inputroot;
   TString outputhist;
-//  inputroot=Form("ROOTfiles/OPTICS/6_667GeV/nps_hms_optics_hadd_%s_1_-1.root",OpticsID.Data());
-  inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_%s_1_%d.root",OpticsID.Data(),FileID);
+//  inputroot=Form("ROOTfiles/OPTICS/6_667GeV/nps_hms_optics_ang6_667fit_%s_1_-1.root",OpticsID.Data());
+ 
+   inputroot=Form("ROOTfiles/OPTICS/4_637GeV/nps_hms_optics_coeff2018_%s_1_-1.root",OpticsID.Data());
+//inputroot=Form("ROOTfiles/OPTICS/5_878GeV/nps_hms_optics_hadd_%s_1_%d.root",OpticsID.Data(),FileID);
+//inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_5p878test4_%s_1_-1.root",OpticsID.Data());
 
   outputhist=Form("hist/Optics_%s_%d_hist.root",OpticsID.Data(),FileID);
   cout << " input root = " << inputroot << endl;
@@ -361,8 +364,10 @@ Long64_t nentries = tsimc->GetEntries();
 		  if (delta>-10 && delta<10) hytar->Fill(ytar);
 		  if (delta>-10 && delta<10) hztar->Fill(reactz);
 		  if (delta>-10 && delta<10) hztarCalc->Fill(ztarCalc);
-		  hXptarDelta->Fill(xptar,delta);
-		  hYptarDelta->Fill(yptar,delta);
+		 // if (reactz>6 && reactz <9)
+		hXptarDelta->Fill(xptar,delta);
+		 // if (reactz>6 && reactz <9)
+ 		 hYptarDelta->Fill(yptar,delta);
 		  hYtarDelta->Fill(ytar,delta);
 		  hYtarYptar->Fill(yptar,ytar);
 		  hYpFpYFp_all->Fill(ypfp,yfp);

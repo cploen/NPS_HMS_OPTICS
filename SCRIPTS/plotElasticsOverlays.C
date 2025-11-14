@@ -29,61 +29,77 @@
 #include <TLegend.h>
 using namespace std;
 
-void plotElasticOverlays(){
-
+void plotElasticsOverlays(Int_t pRun=6117){
+//4 digit momentum, no decimal, as arg:
+//6667, 6117, 5878, 5369
+//
 //Readme: set runs, kinematics, and output file type in beginning of script
-// How do I pass a string in to a file name? 
-
-std::string MatrixEl="angular6_67";//"_jmurphyME";//"_coeff2018";
-
-
-//"KinC-x50-2" Runs 1534,1535,1536
-TFile *f = TFile::Open("./Output/elastic/hist/Singles_KinC-x50-2_angular6_67.root");
-TFile *fout = new TFile("Output/elastic/hist/Overlays_KinC-x50-2_angular6_67.root","RECREATE");
-std::string kinSetting="KinC-x50-2"; 
 
 const int nSettings=3;
-int nRun[nSettings]={1534,1535,1536}; //run numbers for LH2 Optics/Elastics scans, KinC-x50-2 at -6.667 GeV/c
-double centAng[nSettings]={19.145,17.995,16.850};//deg
-double centMom=-6.667;
-
+//double centAng;
+//double centMom;
+std::string MatrixEl="ang";
+	cout << " Plotting runs for HMS_P = 5.878 GeV " << endl;
+	//"KinC-x60-3" Runs 1714, 1715, 1716
+	TFile *f = TFile::Open("./Output/elastic/hist/Singles_5p878ang.root");
+	TFile *fout = new TFile("Output/elastic/hist/Overlays_5p878ang.root","RECREATE");
+	//std::string kinSetting="KinC-x60-3"; 
+	 std::string kinSetting="5p878";
+ 
+	int nRun[nSettings]={1716,1715,1714};
+	double centAng[nSettings]={20.545,21.685,22.835};//deg
+	double centMom=-5.878;
 
 /*
-//KinC-x36-3 Runs 1250,1251,1259
-TFile *f = TFile::Open("./Output/elastic/Singles_KinC-x36-3_jmurphyME.root");
-TFile *fout = new TFile("Output/elastic/Overlays_KinC-x36-3_jmurphyME.root","RECREATE");
-std::string kinSetting="KinC-x36-3"; 
+if (pRun == 6667) {
+	cout << " Plotting runs for HMS_P = 6.667 GeV " << endl;
+	//"KinC-x50-2" Runs 1534,1535,1536
+	TFile *f = TFile::Open("./Output/elastic/hist/Singles_6p667ang.root");
+	TFile *fout = new TFile("Output/elastic/hist/Overlays_6p667ang.root","RECREATE");
+//	 std::string kinSetting="KinC-x50-2"; 
+	 std::string kinSetting="6p667"; 
 
-const int nSettings=3;
-int nRun[nSettings]={1250,1251,1259}; //run numbers for LH2 Optics scans, KinC-x50-2 at -6.667 GeV/c
-double centAng[nSettings]={19.26,20.69,22.12};//deg
-double centMom=-6.117;
+	int nRun[nSettings]={1534,1535,1536};
+	double centAng[nSettings]={19.145,17.995,16.850};//deg
+	double centMom=-6.667;
+} else if (pRun == 6117){
+	cout << " Plotting runs for HMS_P = 6.117 GeV " << endl;
+	//KinC-x36-3 Runs 1250,1251,1259
+	TFile *f = TFile::Open("./Output/elastic/hist/Singles_6p117ang.root");
+	TFile *fout = new TFile("Output/elastic/hist/Overlays_6p117ang.root","RECREATE");
+	//std::string kinSetting="KinC-x36-3"; 
+	 std::string kinSetting="6p117"; 
 
+	int nRun[nSettings]={1250,1251,1259}; 
+	double centAng[nSettings]={19.26,20.69,22.12};//deg
+	double centMom=-6.117;
+} else if (pRun == 5878){
+	cout << " Plotting runs for HMS_P = 5.878 GeV " << endl;
+	//"KinC-x60-3" Runs 1714, 1715, 1716
+	TFile *f = TFile::Open("./Output/elastic/hist/Singles_5p878ang.root");
+	TFile *fout = new TFile("Output/elastic/hist/Overlays_5p878ang.root","RECREATE");
+	//std::string kinSetting="KinC-x60-3"; 
+	 std::string kinSetting="5p878";
+ 
+	int nRun[nSettings]={1716,1715,1714};
+	double centAng[nSettings]={20.545,21.685,22.835};//deg
+	double centMom=-5.878;
+} else if (pRun == 5639){
+	cout << " Plotting runs for HMS_P = 5.639 GeV " << endl;
+	//"KinC-x25-3'" Runs 1267,1268,1269
+	TFile *f = TFile::Open("./Output/elastic/hist/Singles_5p639ang.root");
+	TFile *fout = new TFile("Output/elastic/hist/Overlays_5p639ang.root","RECREATE");
+	//std::string kinSetting="KinC-x25-3'"; 
+	std::string kinSetting="5p639"; 
+
+	int nRun[nSettings]={1267,1268,1269};
+	double centAng[nSettings]={21.27,22.7,24.30};//deg
+	double centMom=-5.639;
+}else {
+	cout << "Invalid momentum setting" << endl;
+	return;
+}
 */
-/*
-//"KinC-x60-3" Runs 1714, 1715, 1716
-TFile *f = TFile::Open("./Output/elastic/Singles_KinC-x60-3_jmurphyME.root");
-TFile *fout = new TFile("Output/elastic/Overlays_KinC-x60-3_jmurphyME.root","RECREATE");
-std::string kinSetting="KinC-x60-3"; 
-
-const int nSettings=3;
-int nRun[nSettings]={1714,1715,1716}; //run numbers for LH2 Optics scans, KinC-x50-2 at -6.667 GeV/c
-double centAng[nSettings]={22.835,21.685,20.545};//deg
-double centMom=-5.878;
-*/
-
-/*
-//"KinC-x25-3'" Runs 1267,1268,1269
-TFile *f = TFile::Open("./Output/elastic/Singles_KinC-x25-3'_jmurphyME.root");
-TFile *fout = new TFile("Output/elastic/Overlays_KinC-x25-3'_jmurphyME.root","RECREATE");
-std::string kinSetting="KinC-x25-3'"; 
-
-const int nSettings=3;
-int nRun[nSettings]={1267,1268,1269}; //run numbers for LH2 Optics scans, KinC-x50-2 at -6.667 GeV/c
-double centAng[nSettings]={21.27,22.7,24.30};//deg
-double centMom=-5.639;
-*/
-
 std::string pdf_file_name=Form("Output/elastic/plots/Overlays_");
 std::string file_format=".pdf";
 
@@ -103,13 +119,21 @@ canvas->SetGridy();
 canvas->Update();
 
 //1D Histos
+TH1F *hW20 = (TH1F*)f->Get("h_kinW2_0");
+  hW20->SetName("hW20");
+  hW20->SetTitle(Form("h_kinW2 at %f GeV/c",centMom)); 
+  hW20->SetLineColor(kRed);
+  hW20->SetLineWidth(2);
+  //hW20->Scale(1./hW20->GetMaximum());
+  hW20->Draw("histo");
+
 
 TH1F *hW22 = (TH1F*)f->Get("h_kinW2_2");
   hW22->SetName("hW22");
   hW22->SetLineColor(kGreen);
   hW22->SetLineWidth(2);
   //hW22->Scale(1./hW22->GetMaximum());
-  hW22->Draw("histo");
+  hW22->Draw("histosame");
 
 TH1F *hW21 = (TH1F*)f->Get("h_kinW2_1");
   hW21->SetName("hW21");
@@ -118,13 +142,6 @@ TH1F *hW21 = (TH1F*)f->Get("h_kinW2_1");
   //hW21->Scale(1./hW21->GetMaximum());
   hW21->Draw("histosame");
 
-TH1F *hW20 = (TH1F*)f->Get("h_kinW2_0");
-  hW20->SetName("hW20");
-  hW20->SetTitle(Form("h_kinW2 at %f GeV/c",centMom)); 
-  hW20->SetLineColor(kRed);
-  hW20->SetLineWidth(2);
-  //hW20->Scale(1./hW20->GetMaximum());
-  hW20->Draw("histosame");
 
   TLegend *legL = new TLegend(0.125,0.875,0.4,0.75);//Top left, quite good
 //TLegend *legL = new TLegend(0.15,0.85,0.4,0.7);//top left, not bad
@@ -148,13 +165,22 @@ TH1F *h0 = (TH1F*)f->Get("h_kinW_0");
  // h0->Scale(1./h0->GetMaximum()); //normalize nevents
   h0->Draw("histo");
 
-
 TH1F *h2 = (TH1F*)f->Get("h_kinW_2");
   h2->SetName("h2");
   h2->SetLineColor(kGreen);
   h2->SetLineWidth(2);
  // h2->Scale(1./h2->GetMaximum());
   h2->Draw("histosame");
+
+
+TH1F *h1 = (TH1F*)f->Get("h_kinW_1");
+  h1->SetName("h1");
+  h1->SetLineColor(kBlue);
+  h1->SetLineWidth(2);
+ // h2->Scale(1./h2->GetMaximum());
+  h1->Draw("histosame");
+
+
 
   TLegend *legR = new TLegend(0.6,0.8,.89,.89);//This one's perfect! Very top RHS (x1,y1,x2,y2_)
 //TLegend *legR = new TLegend(0.5,0.6,0.8,0.8);//top right
@@ -166,7 +192,6 @@ TH1F *h2 = (TH1F*)f->Get("h_kinW_2");
   legR->Draw();
 
 canvas->Print((pdf_file_name + kinSetting + MatrixEl + file_format+"(").c_str());
-
 TH1F *hd0 = (TH1F*)f->Get("h_delta_0");
   hd0->SetName("hd0");
   hd0->SetTitle("h_delta");
@@ -175,13 +200,6 @@ TH1F *hd0 = (TH1F*)f->Get("h_delta_0");
  // hd0->Scale(1./hd0->GetMaximum());
   hd0->Draw("histo");
 
-TH1F *hd1 = (TH1F*)f->Get("h_delta_1");
-  hd1->SetName("hd1");
-  hd1->SetLineColor(kBlue);
-  hd1->SetLineWidth(2);
- // hd1->Scale(1./hd1->GetMaximum());
-  hd1->Draw("histosame");
-
 TH1F *hd2 = (TH1F*)f->Get("h_delta_2");
   hd2->SetName("hd2");
   hd2->SetLineColor(kGreen);
@@ -189,10 +207,17 @@ TH1F *hd2 = (TH1F*)f->Get("h_delta_2");
  // hd2->Scale(1./hd2->GetMaximum());
   hd2->Draw("histosame");
 
+
+TH1F *hd1 = (TH1F*)f->Get("h_delta_1");
+  hd1->SetName("hd1");
+  hd1->SetLineColor(kBlue);
+  hd1->SetLineWidth(2);
+ // hd1->Scale(1./hd1->GetMaximum());
+  hd1->Draw("histosame");
+
+
 // leg->Draw();
  canvas->Print((pdf_file_name + kinSetting + MatrixEl + file_format+"(").c_str());
-
-
 TH1F *hyptar0 = (TH1F*)f->Get("h_yptar_0");
   hyptar0->SetName("hyptar0");
  // h0->SetTitle("h_kinW %s",kinSetting.c_str());
@@ -202,12 +227,6 @@ TH1F *hyptar0 = (TH1F*)f->Get("h_yptar_0");
  // hyptar0->Scale(1./hyptar0->GetMaximum());
   hyptar0->Draw("histo");
 
-TH1F *hyptar1 = (TH1F*)f->Get("h_yptar_1");
-  hyptar1->SetName("hyptar1");
-  hyptar1->SetLineColor(kBlue);
-  hyptar1->SetLineWidth(2);
- // hyptar1->Scale(1./hyptar1->GetMaximum());
-  hyptar1->Draw("histosame");
 
 TH1F *hyptar2 = (TH1F*)f->Get("h_yptar_2");
   hyptar2->SetName("hyptar2");
@@ -216,11 +235,17 @@ TH1F *hyptar2 = (TH1F*)f->Get("h_yptar_2");
   //hyptar2->Scale(1./hyptar2->GetMaximum());
   hyptar2->Draw("histosame");
 
+TH1F *hyptar1 = (TH1F*)f->Get("h_yptar_1");
+  hyptar1->SetName("hyptar1");
+  hyptar1->SetLineColor(kBlue);
+  hyptar1->SetLineWidth(2);
+ // hyptar1->Scale(1./hyptar1->GetMaximum());
+  hyptar1->Draw("histosame");
+
 //leg->Draw();
 canvas->Print((pdf_file_name + kinSetting + MatrixEl + file_format+"(").c_str());
 
-
-// 2D Histos
+// 2D Histos Overlays
 TH2F *h20 = (TH2F*)f->Get("h2_dptheta_0");
 h20->SetName("h20");
 h20->SetTitle("Theta vs Delta");
