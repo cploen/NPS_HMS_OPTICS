@@ -302,9 +302,13 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
      hybpm_tar->Fill(ybpm_tar);		  
    }}
 
-Double_t xbeam = -hxbpm_tar->GetMean(); // horizontal beam in Hall coordinates
-Double_t ybeam = hybpm_tar->GetMean();
-cout << " xbeam = " << xbeam << " ybeam = " << ybeam << endl;
+//Double_t xbeam = -hxbpm_tar->GetMean(); // OLD WAY: constant beam in Hall coordinates
+//Double_t ybeam = hybpm_tar->GetMean();
+//cout << " xbeam = " << xbeam << " ybeam = " << ybeam << endl;
+
+Double_t xbeam = -hxbpm_tar; // NEW WAY: dynamic beam in Hall coordinates
+Double_t ybeam = hybpm_tar;
+
 
 //loop over entries
 cout << " start loop " << nentries << endl;
