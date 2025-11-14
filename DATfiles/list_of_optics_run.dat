@@ -5,7 +5,7 @@ delcut
 KinC_x36_3
 RUN: 1243, p=-6.117 GeV/c, Mag OFF, HMS_Angle = 12.395, Carbon +/-8 cm
 1243,1243,12.395,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1245, p=-6.117 GeV/c, Mag ON, HMS_Angle = 12.395, Sieve, 0.5% C
@@ -15,7 +15,7 @@ RUN: 1245, p=-6.117 GeV/c, Mag ON, HMS_Angle = 12.395, Sieve, 0.5% C
 
 RUN: 1246, p=-6.117 GeV/c, Mag ON, HMS_Angle = 12.395, Sieve, Carbon +/-8 cm
 1246,1246,12.395,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1248, p=-6.117 GeV/c, Mag OFF, HMS_Angle = 12.395, Sieve, Carbon +/- 3cm
@@ -35,23 +35,23 @@ RUN: 1964, p=-6.117 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.385, Carbon 0.5%
 
 RUN: 1965, p=-6.117 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.385, Carbon +/-8cm
 1965,1965,12.385,1,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1966, p=-6.117 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.385, Carbon +/-8cm
 1966,1966,12.385,1,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1967, p=-6.117 GeV/c, Sieve, Mag ON, HMS_Angle = 12.385, Carbon +/-8cm
 1967,1967,12.385,1,1,6,0.0
-7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 KinC_x25_3'
 RUN: 1262, p=-5.639 GeV/c, Sieve, Mag OFF, Carbon +/-8 cm
 1262,1262,12.385,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1263, p=-5.639 GeV/c, Sieve, Mag ON, Carbon 0.5%
@@ -61,7 +61,7 @@ RUN: 1263, p=-5.639 GeV/c, Sieve, Mag ON, Carbon 0.5%
 
 RUN: 1264, p=-5.639 GeV/c, Sieve, Mag ON, Carbon +/-8 cm
 1264,1264,12.385,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1265, p=-5.639 GeV/c, Sieve, Mag OFF, Carbon +/-3 cm
@@ -82,12 +82,12 @@ RUN: 1538, p=-6.667 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.490, Carbon 0.5%
 
 RUN: 1539, p=-6.667 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.490, Carbon +/-8 cm
 1539,1539,12.490,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1540, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 12.490, Carbon +/-8 cm
 1540,1540,12.490,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1541, P=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 12.490, Carbon 0.5%
@@ -123,7 +123,7 @@ RUN: 1712, p=-5.878 GeV/c, Sieve, Mag OFF, HMS_Angle = 16.500, Carbon 0.5%
 
 RUN: 1713, p=-5.878 GeV/c, Sieve, Mag OFF, HMS_Angle = 16.500, Carbon +/-8 cm
 1713,1713,16.500,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1717, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 16.500, Carbon 0.5%
@@ -133,13 +133,39 @@ RUN: 1717, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 16.500, Carbon 0.5%
 
 RUN: 1718, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 16.495, Carbon +/-8cm
 1718,1718,16.495,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 1720, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 16.495, Carbon 0.5%
 1720,1720,16.495,1,1,6,0.0
 0.
 -10,-8.,-5.,0.,5.,10.
+
+RUN: 5168, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon 0.5%
+5168,5168,15.195,1,1,6,0.0
+0.
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 5169, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon +/-8cm
+5169,5169,15.195,2,1,6,0.0
+-8.0,8.0
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 5170, p=-5.878 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon +/-3cm
+5170,5170,15.195,2,1,6,0.0
+-3.0,3.0
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 5171, p=-5.878 GeV/c, Sieve, Mag OFF, HMS_Angle = 15.195, Carbon +/-3cm
+5171,5171,15.195,2,1,6,0.0
+-3.0,3.0
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 7008, p=-5.878 GeV/c, Sieve, Mag OFF, HMS_Angle = 16.48, Carbon +/-3cm
+7008,7008,16.48,2,1,6,0.0
+-3.0,3.0
+-10,-8.,-5.,0.,5.,10.
+
 
 Low Momentum Validation/Sweeper Test
 RUN: 2184, p=-4.637 GeV/c, Sieve, Mag ON, HMS_Angle = 16.435, Carbon 0.5%
@@ -149,12 +175,12 @@ RUN: 2184, p=-4.637 GeV/c, Sieve, Mag ON, HMS_Angle = 16.435, Carbon 0.5%
 
 RUN: 2185, p=-4.637 GeV/c, Sieve, Mag ON, HMS_Angle = 16.435, Carbon +/-8cm
 2185,2185,16.435,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 2186, p=-4.637 GeV/c, Sieve, Mag OFF, HMS_Angle = 16.435, Carbon +/-8cm
 2186,2186,16.435,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 2187, p=-4.637 GeV/c, Sieve, Mag OFF, HMS_Angle = 16.435, Carbon 0.5%
@@ -190,7 +216,7 @@ RUN: 5160, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon +/- 3cm
 
 RUN: 5161, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon +/- 8cm
 5161,5161,15.195,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 5162, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon 0.5%
@@ -200,11 +226,21 @@ RUN: 5162, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon 0.5%
 
 RUN: 5163, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 15.195, Carbon +/- 8cm
 5163,5163,15.195,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
 -10,-8.,-5.,0.,5.,10.
 
 RUN: 5164, p=-6.667 GeV/c, Sieve, Mag OFF, HMS_Angle = 15.195, Carbon +/- 8cm
 5164,5164,15.195,2,1,6,0.0
--7.5.,7.5.
+-8.0,8.0
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 6984, p=-6.667 GeV/c, Sieve, Mag ON, HMS_Angle = 12.5, Carbon +/- 8cm
+6984,6984,12.5,2,1,6,0.0
+-8.0,8.0
+-10,-8.,-5.,0.,5.,10.
+
+RUN: 6985, p=-6.667 GeV/c, Sieve, Mag OFF, HMS_Angle = 12.5, Carbon +/- 3cm
+6985,6985,12.5,2,1,6,0.0
+-3.,3.
 -10,-8.,-5.,0.,5.,10.
 
