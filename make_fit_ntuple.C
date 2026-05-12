@@ -304,17 +304,15 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 
 //Double_t xbeam = -hxbpm_tar->GetMean(); // OLD WAY: constant beam in Hall coordinates
 //Double_t ybeam = hybpm_tar->GetMean();
-//cout << " xbeam = " << xbeam << " ybeam = " << ybeam << endl;
-
-Double_t xbeam = -hxbpm_tar; // NEW WAY: dynamic beam in Hall coordinates
-Double_t ybeam = hybpm_tar;
-
 
 //loop over entries
 cout << " start loop " << nentries << endl;
 CentAngle=CentAngle*3.14159/180.;
 for (int i = 0; i < nentries; i++) {
   tsimc->GetEntry(i);
+  Double_t xbeam = -xbpm_tar;
+  Double_t ybeam =  ybpm_tar;
+
   if (i%50000==0) cout << " Entry = " << i << endl;
   if (etracknorm>.8 && sumnpe > 6. && delta>-10 && delta<10) {
     Int_t nf_found=-1, nd_found=-1,ny_found=-1,nx_found=-1;
