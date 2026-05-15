@@ -100,7 +100,7 @@ gStyle->SetPalette(1,0);
   TString outputhist;
 //  inputroot=Form("ROOTfiles/OPTICS/6_667GeV/nps_hms_optics_ang6_667fit_%s_1_-1.root",OpticsID.Data());
  
-   inputroot=Form("ROOTfiles/OPTICS/4_637GeV/nps_hms_optics_coeff2018_%s_1_-1.root",OpticsID.Data());
+   inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_%s_1_-1.root",OpticsID.Data());
 //inputroot=Form("ROOTfiles/OPTICS/5_878GeV/nps_hms_optics_hadd_%s_1_%d.root",OpticsID.Data(),FileID);
 //inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_5p878test4_%s_1_-1.root",OpticsID.Data());
 
