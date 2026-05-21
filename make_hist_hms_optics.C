@@ -373,7 +373,6 @@ Long64_t nentries = tsimc->GetEntries();
 		  hYpFpYFp_all->Fill(ypfp,yfp);
 		  hXpFpXFp_all->Fill(xpfp,xfp);
 		  hYFpXFp_all->Fill(yfp,xfp); 
-		  hYtarYptar->Fill(yptar,ytar);
 		  hZtarDelta->Fill(reactz,delta);
 	          for  (UInt_t nc=0;nc<ytar_delta_cut.size();nc++) {
 		       if (ytar_delta_cut[nc]->IsInside(ytar,delta))	{ 
