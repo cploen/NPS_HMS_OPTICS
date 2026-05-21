@@ -115,6 +115,12 @@ gStyle->SetPalette(1,0);
     YtarDeltaCutFile=Form("cuts/ytar_delta_%s_%d_cut.root",OpticsID.Data(),FileID);
     fYtarDeltaCut = new TFile(YtarDeltaCutFile);
     cout << "Ytar Cut file = " << YtarDeltaCutFile << endl;
+    if (!fYtarDeltaCut || fYtarDeltaCut->IsZombie()) {
+      cout << "ERROR: cannot open Ytar/delta cut file: "
+           << YtarDeltaCutFile << endl;
+      return;
+    }
+
    for (Int_t nc=0;nc<NumFoil;nc++) {
       fYtarDeltaCut->cd();
       TCutG* tempcut = (TCutG*)fcut->Get(Form("delta_vs_ytar_cut_foil%d",nc));
@@ -142,7 +148,15 @@ gStyle->SetPalette(1,0);
    outCutFile=Form("cuts/YpFpYFp_%s_%d_cut.root",OpticsID.Data(),FileID);
     fcut = new TFile(outCutFile);
     cout << " Cut file = " << outCutFile << endl;
+    
+    if (!fcut || fcut->IsZombie()) {
+      cout << "ERROR: cannot open YpFp/YFp cut file: "
+           << outCutFile << endl;
+      return;
+    }
+    
     fcut->cd();
+
 	for  (Int_t nf=0;nf<NumFoil;nf++) {
 	for  (Int_t nd=0;nd<ndelcut;nd++) {
         for (Int_t nc=0;nc<9;nc++) {
@@ -172,7 +186,15 @@ gStyle->SetPalette(1,0);
     xpfp_xfp_outCutFile=Form("cuts/XpFpXFp_%s_%d_cut.root",OpticsID.Data(),FileID);
     xpfp_xfp_fcut = new TFile(xpfp_xfp_outCutFile);
     cout << "xpfp_xfp_ Cut file = " << xpfp_xfp_outCutFile << endl;
+    
+    if (!xpfp_xfp_fcut || xpfp_xfp_fcut->IsZombie()) {
+      cout << "ERROR: cannot open XpFp/XFp cut file: "
+           << xpfp_xfp_outCutFile << endl;
+      return;
+    }
+    
     xpfp_xfp_fcut->cd();
+
 	for  (Int_t nf=0;nf<NumFoil;nf++) {
 	for  (Int_t nd=0;nd<ndelcut;nd++) {
         for (Int_t nc=0;nc<9;nc++) {
@@ -186,9 +208,24 @@ gStyle->SetPalette(1,0);
       }
 	}}}
   }
-//
-TFile *fsimc = new TFile(inputroot); 
+
+TFile *fsimc = new TFile(inputroot);
+
+if (!fsimc || fsimc->IsZombie()) {
+  cout << "ERROR: cannot open input ROOT file: "
+       << inputroot << endl;
+  return;
+}
+
 TTree *tsimc = (TTree*) fsimc->Get("T");
+
+if (!tsimc) {
+  cout << "ERROR: cannot find tree T in input ROOT file: "
+       << inputroot << endl;
+  return;
+}
+
+
 // Define branches
  Double_t  sumnpe;
    tsimc->SetBranchAddress("H.cer.npeSum",&sumnpe);
