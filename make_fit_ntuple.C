@@ -316,17 +316,17 @@ for (int i = 0; i < nentries; i++) {
   if (i%50000==0) cout << " Entry = " << i << endl;
   if (etracknorm>.8 && sumnpe > 6. && delta>-10 && delta<10) {
     Int_t nf_found=-1, nd_found=-1,ny_found=-1,nx_found=-1;
-    for  (UInt_t nf=0;nf<ytar_delta_cut.size();nf++) {
+    for  (Int_t nf=0;nf<ytar_delta_cut.size();nf++) {
       if (ytar_delta_cut[nf]->IsInside(ytar,delta)) nf_found=nf;
     } 
-    for  (UInt_t nd=0;nd<ndelcut;nd++) {
+    for  (Int_t nd=0;nd<ndelcut;nd++) {
      if ( delta >=delcut[nd] && delta <delcut[nd+1])  nd_found=nd;
     }
     if (nf_found!=-1 && nd_found!=-1) {
-      for  (UInt_t ny=0;ny<9;ny++) {
+      for  (Int_t ny=0;ny<9;ny++) {
         if (ypfp_yfp_cut[nf_found][nd_found][ny] && ypfp_yfp_cut[nf_found][nd_found][ny]->IsInside(ypfp,yfp)) ny_found=ny;
 	}
-        for  (UInt_t nx=0;nx<9;nx++) {
+        for  (Int_t nx=0;nx<9;nx++) {
 	  if (xpfp_xfp_cut[nf_found][nd_found][nx] && xpfp_xfp_cut[nf_found][nd_found][nx]->IsInside(xpfp,xfp)) nx_found=nx;
 	  }
     }
