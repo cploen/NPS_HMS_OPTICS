@@ -247,10 +247,6 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 	HList.Add(hytar);
 	TH1F *hztar = new TH1F("hztar",Form("Run %d ; Ztar; Counts",nrun),500,-35.,25.);
 	HList.Add(hztar);
-//what is ztarg?  Added from make_hist_hms_optics_v2.C
-	TH1F *hztarg = new TH1F("hztarg",Form("Run %d ; Ztarg; Counts",nrun),500,-35.,25.);
-        HList.Add(hztarg);
-
 	TH1F *hztarCalc = new TH1F("hztarCalc",Form("Run %d ; ZtarCalc; Counts",nrun),500,-35.,25.);
 	HList.Add(hztarCalc);
 	TH2F *hXptarDelta = new TH2F("hXptarDelta",Form("Run %d ; Xptar ; Delta",nrun),120,-.1,.1,100,-10.,10.);
