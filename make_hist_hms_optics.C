@@ -117,7 +117,7 @@ gStyle->SetPalette(1,0);
     cout << "Ytar Cut file = " << YtarDeltaCutFile << endl;
    for (Int_t nc=0;nc<NumFoil;nc++) {
       fYtarDeltaCut->cd();
-      TCutG* tempcut = (TCutG*)gROOT->FindObject(Form("delta_vs_ytar_cut_foil%d",nc));
+      TCutG* tempcut = (TCutG*)fcut->Get(Form("delta_vs_ytar_cut_foil%d",nc));
       if (tempcut) {
       Int_t npt = tempcut->GetN();
       cout << "hYtarDelta_cut = " << nc << " npts = " << npt << endl;
@@ -146,7 +146,7 @@ gStyle->SetPalette(1,0);
 	for  (Int_t nf=0;nf<NumFoil;nf++) {
 	for  (Int_t nd=0;nd<ndelcut;nd++) {
         for (Int_t nc=0;nc<9;nc++) {
-	  TCutG* tempg  = (TCutG*)gROOT->FindObject(Form("hYpFpYFp_cut_yscol_%d_nfoil_%d_ndel_%d",nc,nf,nd));
+	  TCutG* tempg  = (TCutG*)fcut->Get(Form("hYpFpYFp_cut_yscol_%d_nfoil_%d_ndel_%d",nc,nf,nd));
 	  if (tempg)  {
 	    //cout << "hYpFpYFp_cut = " << nc << " " << nf << " " << nd << endl;
 	  ypfp_yfp_cut[nf][nd].push_back(tempg);
@@ -176,7 +176,7 @@ gStyle->SetPalette(1,0);
 	for  (Int_t nf=0;nf<NumFoil;nf++) {
 	for  (Int_t nd=0;nd<ndelcut;nd++) {
         for (Int_t nc=0;nc<9;nc++) {
-	  TCutG* tempg  = (TCutG*)gROOT->FindObject(Form("hXpFpXFp_cut_yscol_%d_nfoil_%d_ndel_%d",nc,nf,nd));
+	  TCutG* tempg  = (TCutG*)fcut->Get(Form("hXpFpXFp_cut_yscol_%d_nfoil_%d_ndel_%d",nc,nf,nd));
 	  if (tempg)  {
 	    //cout << "hXpFpXFp_cut = " << nc << " " << nf << " " << nd << endl;
 	  xpfp_xfp_cut[nf][nd].push_back(tempg);
