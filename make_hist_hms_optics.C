@@ -370,7 +370,7 @@ Long64_t nentries = tsimc->GetEntries();
 		  hXpFpXFp_all->Fill(xpfp,xfp);
 		  hYFpXFp_all->Fill(yfp,xfp); 
 		  hZtarDelta->Fill(reactz,delta);
-	          for  (UInt_t nc=0;nc<ytar_delta_cut.size();nc++) {
+	          for  (Int_t nc=0;nc<ytar_delta_cut.size();nc++) {
 		       if (ytar_delta_cut[nc]->IsInside(ytar,delta))	{ 
 		       hYsDelta[nc]->Fill(ysieve,delta);
 		       hXsDelta[nc]->Fill(xsieve,delta);
@@ -382,7 +382,7 @@ Long64_t nentries = tsimc->GetEntries();
                                hYsXs_DelCut[nc][nd]->Fill(ysieve,xsieve); 
 		               hYpFpYFp_DelCut[nc][nd]->Fill(ypfp,yfp);
 			       Int_t f_ny=-1;
-                               for  (UInt_t ny=0;ny<9;ny++) {
+                               for  (Int_t ny=0;ny<9;ny++) {
 				 if (CutYpFpYFpFlag && ypfp_yfp_cut[nc][nd][ny] && ypfp_yfp_cut[nc][nd][ny]->IsInside(ypfp,yfp)) {
 				hYsXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(ysieve,xsieve);
 				hXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(xsieve);
@@ -391,7 +391,7 @@ Long64_t nentries = tsimc->GetEntries();
 			       }
 			       // Fill XpFp/XFp plot only for events that pass the YpFp/YFp cut.
 			       if (f_ny !=-1) hXpFpXFp_DelCut[nc][nd]->Fill(xpfp,xfp);
-                               for  (UInt_t nx=0;nx<9;nx++) {
+                               for  (Int_t nx=0;nx<9;nx++) {
 			        if (f_ny !=-1 && CutXpFpXFpFlag && xpfp_xfp_cut[nc][nd][nx] && xpfp_xfp_cut[nc][nd][nx]->IsInside(xpfp,xfp)) {
 				hYsXs_DelCut_XpXfpCut[nc][nd][nx]->Fill(ysieve,xsieve);
 		  	          }      
