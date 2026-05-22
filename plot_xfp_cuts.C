@@ -102,7 +102,9 @@ void plot_xfp_cuts(Int_t nrun=1814,Int_t FileID=-2) {
    TFile *fhistroot;
    TString outputpdf;
  inputroot=Form("hist/Optics_%s_%d_hist.root",OpticsID.Data(),FileID);
- outputpdf = Form("plots/Optics__%s_%d_xfp_cuts",OpticsID.Data(),FileID);
+// outputpdf = Form("plots/Optics__%s_%d_xfp_cuts",OpticsID.Data(),FileID);
+ outputpdf = Form("plots/NewMatrix/Optics__%s_%d_xfp_cuts",OpticsID.Data(),FileID);
+
      cout << " infile root = " << inputroot << endl;
    fhistroot =  new TFile(inputroot);
  //
