@@ -1,0 +1,4 @@
+# Synthetic merged optics sample ID: 61840
+# Physical runs: 6183, 6184
+# Extra trailing zero indicates this is not a physical CODA run number.
+# Constructed with hadd from ROOTfiles/OPTICS/nps_hms_optics_<run>_1_-1.root
