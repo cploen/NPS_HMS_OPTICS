@@ -36,6 +36,10 @@ gStyle->SetPalette(1,0);
  gStyle->SetLabelSize(0.04,"XY");
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.12);
+
+ TString NewMatrixFile = "DATfiles/nps_hms_2026_6pt667GeV_all.dat";
+ cout << "Using new matrix file = " << NewMatrixFile << endl;
+
  //  Get info for that optics run
  TString OpticsFile = Form("DATfiles/list_of_optics_run.dat");
    ifstream file_optics(OpticsFile.Data());
@@ -98,13 +102,10 @@ gStyle->SetPalette(1,0);
  //
   TString inputroot;
   TString outputhist;
-//  inputroot=Form("ROOTfiles/OPTICS/6_667GeV/nps_hms_optics_ang6_667fit_%s_1_-1.root",OpticsID.Data());
  
    inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_%s_1_-1.root",OpticsID.Data());
-//inputroot=Form("ROOTfiles/OPTICS/5_878GeV/nps_hms_optics_hadd_%s_1_%d.root",OpticsID.Data(),FileID);
-//inputroot=Form("ROOTfiles/OPTICS/nps_hms_optics_5p878test4_%s_1_-1.root",OpticsID.Data());
 
-  outputhist=Form("hist/Optics_%s_%d_hist.root",OpticsID.Data(),FileID);
+  outputhist=Form("hist/Optics_%s_%d_hist_newMatrix.root",OpticsID.Data(),FileID);
   cout << " input root = " << inputroot << endl;
   TObjArray HList(0);
  //
@@ -229,26 +230,24 @@ if (!tsimc) {
 // Define branches
  Double_t  sumnpe;
    tsimc->SetBranchAddress("H.cer.npeSum",&sumnpe);
-// Double_t  sumhgnpe;
-//   tsimc->SetBranchAddress("H.hgcer.npeSum",&sumhgnpe);
  Double_t  etracknorm;
    tsimc->SetBranchAddress("H.cal.etottracknorm",&etracknorm);
- Double_t  ytar;
-   tsimc->SetBranchAddress("H.gtr.y",&ytar);
- Double_t  xtar;
-   tsimc->SetBranchAddress("H.gtr.x",&xtar);
+ Double_t  ytar_old;
+   tsimc->SetBranchAddress("H.gtr.y",&ytar_old);
+ Double_t  xtar_old;
+   tsimc->SetBranchAddress("H.gtr.x",&xtar_old);
  Double_t  reactx;
    tsimc->SetBranchAddress("H.react.x",&reactx);
  Double_t  reacty;
    tsimc->SetBranchAddress("H.react.y",&reacty);
  Double_t  reactz;
    tsimc->SetBranchAddress("H.react.z",&reactz);
- Double_t  delta;
-   tsimc->SetBranchAddress("H.gtr.dp",&delta);
- Double_t  yptar;
-   tsimc->SetBranchAddress("H.gtr.ph",&yptar);
- Double_t  xptar;
-   tsimc->SetBranchAddress("H.gtr.th",&xptar);
+ Double_t  delta_old;
+   tsimc->SetBranchAddress("H.gtr.dp",&delta_old);
+ Double_t  yptar_old;
+   tsimc->SetBranchAddress("H.gtr.ph",&yptar_old);
+ Double_t  xptar_old;
+   tsimc->SetBranchAddress("H.gtr.th",&xptar_old);
  Double_t  yfp;
    tsimc->SetBranchAddress("H.dc.y_fp",&yfp);
  Double_t  ypfp;
@@ -257,10 +256,10 @@ if (!tsimc) {
    tsimc->SetBranchAddress("H.dc.x_fp",&xfp);
  Double_t  xpfp;
    tsimc->SetBranchAddress("H.dc.xp_fp",&xpfp);
- Double_t  ysieve;
-   tsimc->SetBranchAddress("H.extcor.ysieve",&ysieve);
- Double_t  xsieve;
-   tsimc->SetBranchAddress("H.extcor.xsieve",&xsieve);
+ Double_t  ysieve_old;
+   tsimc->SetBranchAddress("H.extcor.ysieve",&ysieve_old);
+ Double_t  xsieve_old;
+   tsimc->SetBranchAddress("H.extcor.xsieve",&xsieve_old);
  Double_t  xbpm_tar;
    tsimc->SetBranchAddress("H.rb.raster.fr_xbpm_tar",&xbpm_tar);
  Double_t  ybpm_tar;
@@ -270,6 +269,55 @@ if (!tsimc) {
  Double_t fr_ya;
    tsimc->SetBranchAddress("H.rb.raster.fr_ya",&fr_ya);
 
+// Read new matrix coefficients for afterburner reconstruction
+vector<double> xptarcoeffs_new, ytarcoeffs_new, yptarcoeffs_new, deltacoeffs_new;
+vector<int> xfpexpon_new, xpfpexpon_new, yfpexpon_new, ypfpexpon_new, xtarexpon_new;
+
+ifstream coeffsfile(NewMatrixFile.Data());
+
+if (!coeffsfile.is_open()) {
+  cout << "ERROR: cannot open afterburner matrix file: "
+       << NewMatrixFile << endl;
+  return;
+}
+
+string coeffline;
+Int_t num_recon_terms_new = 0;
+
+while (getline(coeffsfile, coeffline)) {
+  if (coeffline.size() == 0) continue;
+  if (coeffline[0] == '!') continue;
+  if (coeffline.find("---") != string::npos) continue;
+
+  Double_t c0, c1, c2, c3;
+  Int_t e0, e1, e2, e3, e4;
+
+  Int_t nread = sscanf(coeffline.c_str(),
+                       " %le %le %le %le %1d%1d%1d%1d%1d",
+                       &c0, &c1, &c2, &c3,
+                       &e0, &e1, &e2, &e3, &e4);
+
+  if (nread != 9) {
+    cout << "WARNING: could not parse matrix line: " << coeffline << endl;
+    continue;
+  }
+
+  xptarcoeffs_new.push_back(c0);
+  ytarcoeffs_new.push_back(c1);
+  yptarcoeffs_new.push_back(c2);
+  deltacoeffs_new.push_back(c3);
+
+  xfpexpon_new.push_back(e0);
+  xpfpexpon_new.push_back(e1);
+  yfpexpon_new.push_back(e2);
+  ypfpexpon_new.push_back(e3);
+  xtarexpon_new.push_back(e4);
+
+  num_recon_terms_new++;
+}
+
+cout << "Loaded new matrix terms = "
+     << num_recon_terms_new << endl;
 
    // Define histograms
 	TH1F *hxbpm_tar = new TH1F("hxbpm_tar",Form("Run %d ; Xbpm_tar ; Counts",nrun),100,-2.,2.);
@@ -378,68 +426,129 @@ if (!tsimc) {
 	//
 // loop over entries
 Long64_t nentries = tsimc->GetEntries();
- cout << " start loop " << nentries << endl;
- Double_t sinth = sin(CentAngle/180*3.14159);
- Double_t costh = cos(CentAngle/180*3.14159);
-  Double_t     y_mis = 0.1*(0.52-0.012*CentAngle+0.002*CentAngle*CentAngle); // cm
-	for (int i = 0; i < nentries; i++) {
-      		tsimc->GetEntry(i);
-                if (i%50000==0) cout << " Entry = " << i << endl;
-		hxbpm_tar->Fill(xbpm_tar);
-		hybpm_tar->Fill(ybpm_tar);
-		hZtarFrXa->Fill(fr_xa,reactz);
-		hZtarFrYa->Fill(fr_ya,reactz);
-		if (sumnpe > 2.) hetot->Fill(etracknorm);
-		if (etracknorm>.8) hngsum->Fill(sumnpe);
-		if (sumnpe > 2. && delta>-10 && delta<10) {
-		  Double_t ztarCalc = (ytar+y_mis) + xbpm_tar*(costh-yptar*sinth);
-		  ztarCalc=-ztarCalc/(sinth+yptar*costh);
-		  if (delta>-10 && delta<10) hytar->Fill(ytar);
-		  if (delta>-10 && delta<10) hztar->Fill(reactz);
-		  if (delta>-10 && delta<10) hztarCalc->Fill(ztarCalc);
-		 // if (reactz>6 && reactz <9)
-		hXptarDelta->Fill(xptar,delta);
-		 // if (reactz>6 && reactz <9)
- 		 hYptarDelta->Fill(yptar,delta);
-		  hYtarDelta->Fill(ytar,delta);
-		  hYtarYptar->Fill(yptar,ytar);
-		  hYpFpYFp_all->Fill(ypfp,yfp);
-		  hXpFpXFp_all->Fill(xpfp,xfp);
-		  hYFpXFp_all->Fill(yfp,xfp); 
-		  hZtarDelta->Fill(reactz,delta);
-	          for  (Int_t nc=0;nc<ytar_delta_cut.size();nc++) {
-		       if (ytar_delta_cut[nc]->IsInside(ytar,delta))	{ 
-		       hYsDelta[nc]->Fill(ysieve,delta);
-		       hXsDelta[nc]->Fill(xsieve,delta);
-		       hYpFpYFp[nc]->Fill(ypfp,yfp);
-		       hXFpYFp[nc]->Fill(yfp,xfp);
-		       hXpFpXFp[nc]->Fill(xpfp,xfp);
-                            for  (Int_t nd=0;nd<ndelcut;nd++) {
-		             if ( delta >=delcut[nd] && delta <delcut[nd+1]) {
-                               hYsXs_DelCut[nc][nd]->Fill(ysieve,xsieve); 
-		               hYpFpYFp_DelCut[nc][nd]->Fill(ypfp,yfp);
-			       Int_t f_ny=-1;
-                               for  (Int_t ny=0;ny<9;ny++) {
-				 if (CutYpFpYFpFlag && ypfp_yfp_cut[nc][nd][ny] && ypfp_yfp_cut[nc][nd][ny]->IsInside(ypfp,yfp)) {
-				hYsXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(ysieve,xsieve);
-				hXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(xsieve);
-				f_ny=ny;
-			        }
-			       }
-			       // Fill XpFp/XFp plot only for events that pass the YpFp/YFp cut.
-			       if (f_ny !=-1) hXpFpXFp_DelCut[nc][nd]->Fill(xpfp,xfp);
-                               for  (Int_t nx=0;nx<9;nx++) {
-			        if (f_ny !=-1 && CutXpFpXFpFlag && xpfp_xfp_cut[nc][nd][nx] && xpfp_xfp_cut[nc][nd][nx]->IsInside(xpfp,xfp)) {
-				hYsXs_DelCut_XpXfpCut[nc][nd][nx]->Fill(ysieve,xsieve);
-		  	          }      
-			        }//nx loop   
-		              }//delta, delcut loop  
-	                    }//ndelcut  
-                          }// IsInside loop
-                        }//nc loop
-	              }//sumnpe, delta loop
-	            }
-	
- TFile hsimc(outputhist,"recreate");
-	HList.Write();
+cout << " start loop " << nentries << endl;
+
+Double_t sinth = sin(CentAngle/180.0*3.14159);
+Double_t costh = cos(CentAngle/180.0*3.14159);
+Double_t y_mis = 0.1*(0.52 - 0.012*CentAngle + 0.002*CentAngle*CentAngle); // cm
+Double_t zdis_sieve = 168.0; // cm
+
+for (int i = 0; i < nentries; i++) {
+  tsimc->GetEntry(i);
+
+  // Reconstruct target quantities using the new matrix
+  Double_t xptar_new = 0.0;
+  Double_t ytar_new_m = 0.0;
+  Double_t yptar_new = 0.0;
+  Double_t delta_new = 0.0;
+
+  for (Int_t icoeff = 0; icoeff < num_recon_terms_new; icoeff++) {
+    Double_t etemp =
+      pow(xfp / 100.0, xfpexpon_new[icoeff]) *
+      pow(yfp / 100.0, yfpexpon_new[icoeff]) *
+      pow(xpfp, xpfpexpon_new[icoeff]) *
+      pow(ypfp, ypfpexpon_new[icoeff]) *
+      pow(xtar_old / 100.0, xtarexpon_new[icoeff]);
+
+    xptar_new  += xptarcoeffs_new[icoeff] * etemp;
+    ytar_new_m += ytarcoeffs_new[icoeff]  * etemp;
+    yptar_new  += yptarcoeffs_new[icoeff] * etemp;
+    delta_new  += deltacoeffs_new[icoeff] * etemp;
+  }
+
+  Double_t ytar_new_cm = ytar_new_m * 100.0;
+  Double_t delta_new_percent = delta_new * 100.0;
+
+  Double_t xsieve_new = xtar_old + xptar_new * zdis_sieve;
+  Double_t ysieve_new = ytar_new_cm + yptar_new * zdis_sieve;
+
+  if (i%50000==0) cout << " Entry = " << i << endl;
+
+  hxbpm_tar->Fill(xbpm_tar);
+  hybpm_tar->Fill(ybpm_tar);
+  hZtarFrXa->Fill(fr_xa, reactz);
+  hZtarFrYa->Fill(fr_ya, reactz);
+
+  if (sumnpe > 2.) hetot->Fill(etracknorm);
+  if (etracknorm > .8) hngsum->Fill(sumnpe);
+
+  // Keep selection using old replay variables for first afterburner test
+  if (sumnpe > 2. && delta_old > -10 && delta_old < 10) {
+
+    // Recalculate ztarCalc using new ytar/yptar
+    Double_t ztarCalc = (ytar_new_cm + y_mis) + xbpm_tar*(costh - yptar_new*sinth);
+    ztarCalc = -ztarCalc/(sinth + yptar_new*costh);
+
+    hytar->Fill(ytar_new_cm);
+    hztar->Fill(reactz);
+    hztarCalc->Fill(ztarCalc);
+
+    hXptarDelta->Fill(xptar_new, delta_new_percent);
+    hYptarDelta->Fill(yptar_new, delta_new_percent);
+    hYtarDelta->Fill(ytar_new_cm, delta_new_percent);
+    hYtarYptar->Fill(yptar_new, ytar_new_cm);
+    hZtarDelta->Fill(reactz, delta_new_percent);
+
+    // Focal-plane plots remain unchanged: these are measured FP variables
+    hYpFpYFp_all->Fill(ypfp, yfp);
+    hXpFpXFp_all->Fill(xpfp, xfp);
+    hYFpXFp_all->Fill(yfp, xfp);
+
+    for (Int_t nc = 0; nc < (Int_t)ytar_delta_cut.size(); nc++) {
+
+      // Use old ytar/delta cut membership for now
+      if (ytar_delta_cut[nc]->IsInside(ytar_old, delta_old)) {
+
+        hYsDelta[nc]->Fill(ysieve_new, delta_new_percent);
+        hXsDelta[nc]->Fill(xsieve_new, delta_new_percent);
+
+        hYpFpYFp[nc]->Fill(ypfp, yfp);
+        hXFpYFp[nc]->Fill(yfp, xfp);
+        hXpFpXFp[nc]->Fill(xpfp, xfp);
+
+        for (Int_t nd = 0; nd < ndelcut; nd++) {
+
+          // Use old delta binning for first test
+          if (delta_old >= delcut[nd] && delta_old < delcut[nd+1]) {
+
+            hYsXs_DelCut[nc][nd]->Fill(ysieve_new, xsieve_new);
+            hYpFpYFp_DelCut[nc][nd]->Fill(ypfp, yfp);
+
+            Int_t f_ny = -1;
+
+            for (Int_t ny = 0; ny < 9; ny++) {
+              if (CutYpFpYFpFlag &&
+                  ypfp_yfp_cut[nc][nd][ny] &&
+                  ypfp_yfp_cut[nc][nd][ny]->IsInside(ypfp, yfp)) {
+
+                hYsXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(ysieve_new, xsieve_new);
+                hXs_DelCut_YpYfpCut[nc][nd][ny]->Fill(xsieve_new);
+                f_ny = ny;
+              }
+            }
+
+            // Fill XpFp/XFp plot only for events that pass the YpFp/YFp cut.
+            if (f_ny != -1) {
+              hXpFpXFp_DelCut[nc][nd]->Fill(xpfp, xfp);
+            }
+
+            for (Int_t nx = 0; nx < 9; nx++) {
+              if (f_ny != -1 &&
+                  CutXpFpXFpFlag &&
+                  xpfp_xfp_cut[nc][nd][nx] &&
+                  xpfp_xfp_cut[nc][nd][nx]->IsInside(xpfp, xfp)) {
+
+                hYsXs_DelCut_XpXfpCut[nc][nd][nx]->Fill(ysieve_new, xsieve_new);
+              }
+            }
+
+          } // delta bin
+        } // nd loop
+      } // ytar/delta cut
+    } // nc loop
+  } // main event selection
 }
+
+TFile hsimc(outputhist,"recreate");
+HList.Write();
+	     }
