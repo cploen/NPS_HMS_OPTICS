@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <string>
 #include <vector>
@@ -18,18 +19,24 @@
 #include <TMatrixD.h>
 #include <TVectorD.h>
 #include <TDecompSVD.h>
+#include <TDatime.h>
+#include <TSystem.h>
+#include <TLatex.h>
 
 
-
-void fit_opt_matrix_v2(Int_t nSettings = 1) {
+void fit_opt_matrix(Int_t nSettings = 1) {
   //  Int_t nSettings = 1; //number of files
   Int_t FileID=-1;
   Int_t maxFoils=2;
   Int_t maxDel=10;
 
   vector<int> runTot;
-  runTot.push_back(1264);
-  runTot.push_back(1263);
+  runTot.push_back(1544);
+  runTot.push_back(1540);
+  runTot.push_back(51600);
+  runTot.push_back(5162);
+  runTot.push_back(51640);
+
 
   gROOT->Reset();
   gStyle->SetOptStat(0);
@@ -38,13 +45,44 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
   gStyle->SetLabelSize(0.04,"XY");
   gStyle->SetTitleSize(0.05,"XY");
   gStyle->SetPadLeftMargin(0.17);
-  //
-  string newcoeffsfilename="nps_hms_newfit_5pt6GeV_all.dat";
-  string oldcoeffsfilename="DATfiles/hms_recon_coeff_opt2018.dat";
 
-  int nfit=0,npar,nfit_max=45000,npar_final=0,max_order=6,norder;
-  Int_t MaxPerBin=1000;
-  Int_t MaxZtarPerBin=15000;
+  auto DrawFitLabel = [](TF1* f) {
+    if (!f) return;
+  
+    TLatex latex;
+    latex.SetNDC();
+    latex.SetTextSize(0.045);
+    latex.SetTextAlign(13);
+  
+    latex.DrawLatex(0.58, 0.82,
+                    Form("#mu = %.4g #pm %.2g", f->GetParameter(1), f->GetParError(1)));
+    latex.DrawLatex(0.58, 0.74,
+                    Form("#sigma = %.4g #pm %.2g", f->GetParameter(2), f->GetParError(2)));
+  };
+    
+  TDatime now;
+  TString fitTag = Form("%04d%02d%02d_%02d%02d",
+                        now.GetYear(), now.GetMonth(), now.GetDay(),
+                        now.GetHour(), now.GetMinute());
+
+  ostringstream sieveMeta;
+  
+  TString settingTag = "6p667";
+  
+  TString oldcoeffsfilename = "DATfiles/nps_hms_optics_6p667_ang.dat";
+  TString newcoeffsfilename = Form("DATfiles/newfit_%s_%s.dat",
+                                   settingTag.Data(), fitTag.Data());
+  
+  TString oldMatrixLabel = gSystem->BaseName(oldcoeffsfilename.Data());
+  TString newMatrixLabel = gSystem->BaseName(newcoeffsfilename.Data());
+  
+  cout << "Old/input matrix: " << oldcoeffsfilename << endl;
+  cout << "New/output matrix: " << newcoeffsfilename << endl;
+  cout << "Fit tag: " << fitTag << endl;
+ 
+  int nfit=0,npar,nfit_max=76448,npar_final=0,max_order=6,norder;
+  Int_t MaxPerBin=1000000;
+  Int_t MaxZtarPerBin=15000000;
 
   //
   TH1F *hDelta = new TH1F("hDelta","Delta ",20,-10.,30.);
@@ -68,13 +106,13 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
   TH1F *hyptarnew = new TH1F("hyptarnew","yptar new recon ",100,-.1,.1);
   TH1F *hyptarnewdiff = new TH1F("hyptarnewdiff","yptar new diff (mr) ",100,-10,10);
   //
-  ofstream newcoeffsfile(newcoeffsfilename.c_str());
- ifstream oldcoeffsfile(oldcoeffsfilename.c_str());
+  ofstream newcoeffsfile(newcoeffsfilename.Data());
+  ifstream oldcoeffsfile(oldcoeffsfilename.Data());
    if(!oldcoeffsfile.is_open()) {
-     cout << " error opening reconstruction coefficient file: " << oldcoeffsfilename.c_str() << endl;
+     cout << " error opening reconstruction coefficient file: " << oldcoeffsfilename << endl;
      return;
    } else {
-     cout << "Open  Old coeff file = " << oldcoeffsfilename.c_str() << endl;
+     cout << "Open  Old coeff file = " << oldcoeffsfilename << endl;
    }
    string line="!";
   int good = getline(oldcoeffsfile,line).good();
@@ -86,7 +124,7 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
     //    cout << line << endl;
   }
   }
-  cout << " skipped " << nskip << " comments lines in file : " << oldcoeffsfilename.c_str() << endl;
+  cout << " skipped " << nskip << " comments lines in file : " << oldcoeffsfilename << endl;
   cout << " at line = " << line.c_str() << endl;
   nskip=0;
  if ( line.compare(0,4," ---")==0) {
@@ -95,7 +133,7 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
     nskip++;
   }
  }
-  cout << " skipped " << nskip << " separation lines in file : " << oldcoeffsfilename.c_str() << endl;
+  cout << " skipped " << nskip << " separation lines in file : " << oldcoeffsfilename << endl;
   cout << line.c_str() << endl;
  
   vector<double> xptarcoeffs_old;
@@ -341,7 +379,7 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
     }
     //
     for (Int_t nf=0;nf<maxFoils;nf++) {//max foils
-      Max_Per_Run_Per_Foil[nf] = 30000;//check this number?
+      Max_Per_Run_Per_Foil[nf] = 9556;//check this number?
       Ztar_Cnts[nf]=0;
       for (Int_t nd=0;nd<maxDel;nd++) {//max del cut
 	for (Int_t ny=0;ny<nysieve;ny++) {	
@@ -444,21 +482,44 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
       }
     }
   }
-  //
-  for (Int_t nf=0;nf<maxFoils;nf++) cout << " counts foil " << nf << " : " << Ztar_Cnts[nf] << endl;
-   
- for (Int_t nf=0;nf<nfoils;nf++) {
-    cout << " ztar = " << ztar_foil[nf] << endl;
-    for (Int_t nd=0;nd<ndelcut-1;nd++) {
-      cout << " Ndelta = " << (delcut[nd]+delcut[nd+1])/2 << endl;       
-      for (Int_t ny=0;ny<nysieve;ny++) {
-	cout <<  Ztar_Ys_Delta_Cnts[nf][nd][ny] << " " ;
-      }
-      cout << endl;
-    }}
   
-  //
-   //
+  sieveMeta << "\nrun: " << RunNum
+            << "\nOpticsID: " << OpticsID
+            << "\nCentAngle: " << CentAngle
+            << "\nnfoils: " << nfoils
+            << "\nSieveFlag: " << SieveFlag
+            << "\n";
+  
+  cout << "Run " << RunNum << " sieve filling summary" << endl;
+  
+  for (Int_t nf=0; nf<maxFoils; nf++) {
+    cout << " counts foil " << nf << " : " << Ztar_Cnts[nf] << endl;
+    sieveMeta << "counts foil " << nf << " : " << Ztar_Cnts[nf] << "\n";
+  }
+  
+  for (Int_t nf=0; nf<nfoils; nf++) {
+    cout << " ztar = " << ztar_foil[nf] << endl;
+    sieveMeta << "ztar = " << ztar_foil[nf] << "\n";
+  
+    for (Int_t nd=0; nd<ndelcut-1; nd++) {
+      Double_t deltaCenter = (delcut[nd] + delcut[nd+1]) / 2.0;
+  
+      cout << " Ndelta = " << deltaCenter << endl;
+      sieveMeta << "Ndelta = " << deltaCenter << "\n";
+  
+      for (Int_t ny=0; ny<nysieve; ny++) {
+        cout << Ztar_Ys_Delta_Cnts[nf][nd][ny] << " ";
+        sieveMeta << Ztar_Ys_Delta_Cnts[nf][nd][ny];
+        if (ny < nysieve-1) sieveMeta << " ";
+      }
+  
+      cout << endl;
+      sieveMeta << "\n";
+    }
+  }
+  
+  sieveMeta << "----\n";
+
   ////////////////////
   //end each run loop
   ////////////////////
@@ -589,43 +650,88 @@ void fit_opt_matrix_v2(Int_t nSettings = 1) {
   newcoeffsfile.close();
   cout << "wrote new coeffs file" << endl;
   //
-  TCanvas *cdiff = new TCanvas("cdiff","Old matrix Diff target",800,800);
+  TCanvas *cdiff = new TCanvas(
+    "cdiff",
+    Form("Old/input matrix residuals vs truth: %s", oldMatrixLabel.Data()),
+    800,800
+  );
   cdiff->Divide(2,2);
+
   cdiff->cd(1);
   hytardiff->Draw();
   hytardiff->Fit("gaus");
   TF1 *fitcydiff=hytardiff->GetFunction("gaus");
+  DrawFitLabel(fitcydiff);
+
   cdiff->cd(2);
   hyptardiff->Draw();
   hyptardiff->Fit("gaus");
   TF1 *fitcypdiff=hyptardiff->GetFunction("gaus");
+  DrawFitLabel(fitcypdiff);
+
   cdiff->cd(3);
   hxptardiff->Draw();
   hxptardiff->Fit("gaus");
   TF1 *fitcxpdiff=hxptardiff->GetFunction("gaus");
+  DrawFitLabel(fitcxpdiff);
+
   cdiff->cd(4);
-  //  hDeltadiff->Draw();
-  //hDeltadiff->Fit("gaus");
-  //TF1 *fitcdeldiff=hDeltadiff->GetFunction("gaus");
-  //
-  TCanvas *cnewdiff = new TCanvas("cnewdiff","Newfit diff target",800,800);
+  TCanvas *cnewdiff = new TCanvas(
+    "cnewdiff",
+    Form("New fitted matrix residuals vs truth: %s", newMatrixLabel.Data()),
+    800,800
+  );
   cnewdiff->Divide(2,2);
   cnewdiff->cd(1);
   hytarnewdiff->Draw();
   hytarnewdiff->Fit("gaus");
   TF1 *fitcynewdiff=hytarnewdiff->GetFunction("gaus");
+  DrawFitLabel(fitcynewdiff);
+
   cnewdiff->cd(2);
   hyptarnewdiff->Draw();
   hyptarnewdiff->Fit("gaus");
   TF1 *fitcypnewdiff=hyptarnewdiff->GetFunction("gaus");
+  DrawFitLabel(fitcypnewdiff);
+
   cnewdiff->cd(3);
   hxptarnewdiff->Draw();
   hxptarnewdiff->Fit("gaus");
   TF1 *fitcxpnewdiff=hxptarnewdiff->GetFunction("gaus");
+  DrawFitLabel(fitcxpnewdiff);
+
   cnewdiff->cd(4);
-  //   hDeltanewdiff->Draw();
-  //hDeltanewdiff->Fit("gaus");
-  //TF1 *fitcdelnewdiff=hDeltanewdiff->GetFunction("gaus");
-  //
- 
+
+  TString oldPdf = Form("plots/Optics_%s_%s_OldFitDiffTarget.pdf",
+                        settingTag.Data(), fitTag.Data());
+
+  TString newPdf = Form("plots/Optics_%s_%s_NewFitDiffTarget.pdf",
+                        settingTag.Data(), fitTag.Data());
+
+  cdiff->Print(oldPdf);
+  cnewdiff->Print(newPdf);
+
+  cout << "Saved old residual plot: " << oldPdf << endl;
+  cout << "Saved new residual plot: " << newPdf << endl;
+
+  TString metaFile = Form("plots/Optics_%s_%s_fit_metadata.txt",
+                          settingTag.Data(), fitTag.Data());
+
+  ofstream meta(metaFile.Data());
+  meta << "fit_tag: " << fitTag << endl;
+  meta << "setting_tag: " << settingTag << endl;
+  meta << "old_input_matrix: " << oldcoeffsfilename << endl;
+  meta << "new_output_matrix: " << newcoeffsfilename << endl;
+  meta << "old_residual_pdf: " << oldPdf << endl;
+  meta << "new_residual_pdf: " << newPdf << endl;
+  meta << "nSettings: " << nSettings << endl;
+  meta << "nfit: " << nfit << endl;
+  meta << "nfit_max: " << nfit_max << endl;
+  meta << "MaxPerBin: " << MaxPerBin << endl;
+  meta << "MaxZtarPerBin: " << MaxZtarPerBin << endl;
+  meta << "\n[sieve_hole_filling]\n";
+  meta << sieveMeta.str();
+  meta.close();
+
+  cout << "Saved fit metadata: " << metaFile << endl;
 }
