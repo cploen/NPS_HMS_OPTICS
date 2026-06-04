@@ -1,0 +1,14 @@
+run	opticsID	nominal_foil_z_cm	fit_mean_cm	fit_sigma_cm	mean_minus_nominal_cm	delta_low	delta_high	fit_low	fit_high	entries	replay_file
+1540	1540	-8	-7.65129	0.49798	0.348713	-8	8	-8.31667	-6.81667	110432	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_1540_1_-1.root
+1540	1540	8	8.07094	0.48142	0.0709382	-8	8	7.41667	8.91667	110432	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_1540_1_-1.root
+1544	1544	0	0.0959333	0.466766	0.0959333	-8	8	-0.65	0.85	295866	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_1544_1_-1.root
+51600	51600	-3	-3.14278	0.447521	-0.142775	-8	8	-3.91667	-2.41667	31407	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_51600_1_-1.root
+51600	51600	3	3.16926	0.43649	0.169257	-8	8	2.41667	3.91667	31407	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_51600_1_-1.root
+5162	5162	0	-0.00962725	0.420263	-0.00962725	-8	8	-0.783333	0.716667	31185	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_5162_1_-1.root
+51640	51640	-8	-7.7892	0.427311	0.210801	-8	8	-8.58333	-7.08333	36593	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_51640_1_-1.root
+51640	51640	8	7.90768	0.428537	-0.0923164	-8	8	7.21667	8.71667	36593	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_51640_1_-1.root
+69820	69820	0	-0.116912	0.463366	-0.116912	-8	8	-0.85	0.65	807003	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_69820_1_-1.root
+69840	69840	-8	-7.91178	0.483867	0.0882205	-8	8	-8.71667	-7.21667	58410	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_69840_1_-1.root
+69840	69840	8	7.83992	0.493957	-0.160078	-8	8	7.15	8.65	58410	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_69840_1_-1.root
+6985	6985	-3	-3.27896	0.477539	-0.278964	-8	8	-3.98333	-2.48333	71310	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_6985_1_-1.root
+6985	6985	3	2.99578	0.501081	-0.00421963	-8	8	2.21667	3.71667	71310	/lustre24/expphy/volatile/hallc/nps/cploen/ROOTfiles/OPTICS/angular_sandbox/zero_offsets/nps_hms_optics_6985_1_-1.root
