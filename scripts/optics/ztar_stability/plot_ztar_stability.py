@@ -5,7 +5,9 @@ from pathlib import Path
 from matplotlib.backends.backend_pdf import PdfPages
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
 
 
 def classify_arrangement(foils):
@@ -61,6 +63,66 @@ def savefig(fig, stem, combined_pdf):
     print(f"Added {stem} to combined PDF")
 
 
+def add_mean_error_column(df):
+    """
+    Add statistical error on the fitted mean.
+
+    Preferred input, if available:
+      fit_mean_err_cm
+
+    Fallback:
+      fit_sigma_cm / sqrt(entries)
+
+    This keeps fitted peak width / RMS separate from uncertainty on the centroid.
+    """
+    if "fit_mean_err_cm" in df.columns:
+        return df
+
+    required = {"fit_sigma_cm", "entries"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Cannot compute error on mean; missing columns: {sorted(missing)}")
+
+    df = df.copy()
+    entries = df["entries"].clip(lower=1)
+    df["fit_mean_err_cm"] = df["fit_sigma_cm"] / np.sqrt(entries)
+    return df
+
+
+def tilted_errorbar(ax, x, y, yerr, dx=0.035, **kwargs):
+    """
+    Draw compact diagonal error bars.
+
+    The vertical span is still y +/- yerr, but the segment is drawn with
+    a slight x-offset so it reads as a slash instead of a vertical whisker.
+    This reduces clutter in crowded comparison plots.
+    """
+    segments = []
+    for xi, yi, ei in zip(x, y, yerr):
+        if not np.isfinite(xi) or not np.isfinite(yi) or not np.isfinite(ei):
+            continue
+        segments.append([(xi - dx, yi - ei), (xi + dx, yi + ei)])
+
+    if not segments:
+        return None
+
+    lc = LineCollection(segments, **kwargs)
+    ax.add_collection(lc)
+    return lc
+
+
+
+def set_clean_foil_ticks(ax, lo=-8, hi=8, step=2):
+    """
+    Use physically meaningful foil-position ticks instead of matplotlib's
+    default half-step ticks. This keeps ±8 on labeled ticks and places ±3
+    cleanly between ±2 and ±4.
+    """
+    ticks = np.arange(lo, hi + 0.5 * step, step)
+    ax.set_xticks(ticks)
+    ax.set_yticks(ticks)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Plot ztar peak stability from TSV produced by fit_ztar_peaks_from_replay.C"
@@ -87,6 +149,30 @@ def main():
     pair_tsv = outdir / f"{tag}_pair_summary.tsv"
 
     df = pd.read_csv(tsv_path, sep="\t")
+    df = add_mean_error_column(df)
+
+    # Write a compact table separating centroid uncertainty from peak width.
+    df["fit_sigma_mm"] = 10.0 * df["fit_sigma_cm"]
+    df["fit_mean_err_mm"] = 10.0 * df["fit_mean_err_cm"]
+    df["mean_minus_nominal_mm"] = 10.0 * df["mean_minus_nominal_cm"]
+
+    summary_cols = [
+        "run",
+        "opticsID",
+        "nominal_foil_z_cm",
+        "fit_mean_cm",
+        "mean_minus_nominal_cm",
+        "mean_minus_nominal_mm",
+        "fit_sigma_cm",
+        "fit_sigma_mm",
+        "fit_mean_err_cm",
+        "fit_mean_err_mm",
+        "entries",
+    ]
+
+    summary_tsv = outdir / f"{tag}_fit_summary_errors.tsv"
+    df[summary_cols].to_csv(summary_tsv, sep="\t", index=False)
+    print(f"Wrote {summary_tsv}")
 
     required = {
         "run",
@@ -192,14 +278,21 @@ def main():
             if sub.empty:
                 continue
 
-            ax.errorbar(
+            marker = markers.get(arr, "o")
+            ax.scatter(
                 sub["nominal_foil_z_cm"],
                 sub["fit_mean_cm"],
-                yerr=sub["fit_sigma_cm"],
-                fmt=markers.get(arr, "o"),
-                linestyle="none",
-                capsize=3,
+                marker=marker,
                 label=arr,
+            )
+            tilted_errorbar(
+                ax,
+                sub["nominal_foil_z_cm"].to_numpy(),
+                sub["fit_mean_cm"].to_numpy(),
+                sub["fit_mean_err_cm"].to_numpy(),
+                dx=0.035,
+                linewidths=1.0,
+                alpha=0.8,
             )
 
             add_labels(
@@ -210,6 +303,7 @@ def main():
                 dx=0.08,
             )
 
+        set_clean_foil_ticks(ax)
         ax.set_xlabel("Nominal foil z [cm]")
         ax.set_ylabel("Fitted H.react.z peak mean [cm]")
         ax.set_title("Fitted z peak mean vs nominal foil position")
@@ -239,14 +333,21 @@ def main():
 
             xpos = [df_plot.index.get_loc(i) for i in sub.index]
 
-            ax.errorbar(
+            marker = markers.get(arr, "o")
+            ax.scatter(
                 xpos,
                 sub["mean_minus_nominal_cm"],
-                yerr=sub["fit_sigma_cm"],
-                fmt=markers.get(arr, "o"),
-                linestyle="none",
-                capsize=3,
+                marker=marker,
                 label=arr,
+            )
+            tilted_errorbar(
+                ax,
+                xpos,
+                sub["mean_minus_nominal_cm"].to_numpy(),
+                sub["fit_mean_err_cm"].to_numpy(),
+                dx=0.035,
+                linewidths=1.0,
+                alpha=0.8,
             )
 
         ax.set_xticks(list(x))
