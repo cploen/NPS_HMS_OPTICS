@@ -122,14 +122,31 @@ void DrawFitText(double x, double y, double znom, TF1* g) {
 }
 
 void fit_ztar_peaks_from_replay(
-  TString runListFile = "ztar_fit_runlist_6p667_wrongFoils_2024Matrix_zero-offsets.txt",
-  TString rootDir = "ROOTfiles/OPTICS/",
-  TString label = "wrongFoils_2024Matrix",
-  Double_t deltaLow = -8.0,
-  Double_t deltaHigh = 8.0
+  TString runListFile = "REPLACE_WITH_ZTAR_RUNLIST.txt",
+  TString rootDir = "REPLACE_WITH_REPLAY_ROOTFILE_DIRECTORY/",
+  TString label = "UNLABELED_ZTAR_TEST_DO_NOT_USE_FOR_RESULTS",
+  Double_t deltaLow = -999.0,
+  Double_t deltaHigh = 999.0
 ) {
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(0);
+
+  if (label == "UNLABELED_ZTAR_TEST_DO_NOT_USE_FOR_RESULTS") {
+    cout << "WARNING: using placeholder label: " << label << endl;
+    cout << "         Pass a descriptive label, e.g. newfit_6p667_20260526." << endl;
+  }
+  if (runListFile == "REPLACE_WITH_ZTAR_RUNLIST.txt") {
+    cout << "ERROR: runListFile is still a placeholder. Pass an explicit runlist." << endl;
+    return;
+  }
+  if (rootDir == "REPLACE_WITH_REPLAY_ROOTFILE_DIRECTORY/") {
+    cout << "ERROR: rootDir is still a placeholder. Pass an explicit replay ROOT directory." << endl;
+    return;
+  }
+  if (deltaLow <= -900.0 || deltaHigh >= 900.0) {
+    cout << "ERROR: delta range is still a placeholder. Pass explicit deltaLow and deltaHigh." << endl;
+    return;
+  }
 
   vector<RunFoils> runs = ReadRunList(runListFile);
   if (runs.size() == 0) {
