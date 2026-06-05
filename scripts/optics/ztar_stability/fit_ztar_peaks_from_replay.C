@@ -116,8 +116,12 @@ void DrawFitText(double x, double y, double znom, TF1* g) {
 
   latex.DrawLatex(
     x, y,
-    Form("z_{nom}=%.1f cm: #mu=%.3f cm, #sigma=%.3f cm",
-         znom, g->GetParameter(1), fabs(g->GetParameter(2)))
+    Form("z_{nom}=%.1f cm: #mu=%.3f #pm %.3f cm, #sigma=%.3f cm, #chi^{2}/ndf=%.2f",
+         znom,
+         g->GetParameter(1),
+         g->GetParError(1),
+         fabs(g->GetParameter(2)),
+         (g->GetNDF() > 0 ? g->GetChisquare() / g->GetNDF() : -1.0))
   );
 }
 
@@ -164,7 +168,11 @@ void fit_ztar_peaks_from_replay(
   gSystem->mkdir("plots", kTRUE);
 
   ofstream out(outTSV.Data());
-  out << "run\topticsID\tnominal_foil_z_cm\tfit_mean_cm\tfit_sigma_cm\tmean_minus_nominal_cm"
+  out << "run\topticsID\tnominal_foil_z_cm"
+      << "\tfit_mean_cm\tfit_mean_err_cm"
+      << "\tfit_sigma_cm\tfit_sigma_err_cm"
+      << "\tmean_minus_nominal_cm"
+      << "\tchi2\tndf\tchi2_ndf"
       << "\tdelta_low\tdelta_high\tfit_low\tfit_high\tentries\treplay_file\n";
 
   bool firstPage = true;
@@ -257,14 +265,26 @@ void fit_ztar_peaks_from_replay(
       fits.push_back(g);
 
       double mean = g->GetParameter(1);
+      double mean_err = g->GetParError(1);
+
       double sigma = fabs(g->GetParameter(2));
+      double sigma_err = g->GetParError(2);
+
+      double chi2 = g->GetChisquare();
+      double ndf = g->GetNDF();
+      double chi2_ndf = (ndf > 0.0) ? chi2 / ndf : -1.0;
 
       out << rf.run << "\t"
           << rf.opticsID << "\t"
           << znom << "\t"
           << mean << "\t"
+          << mean_err << "\t"
           << sigma << "\t"
+          << sigma_err << "\t"
           << mean - znom << "\t"
+          << chi2 << "\t"
+          << ndf << "\t"
+          << chi2_ndf << "\t"
           << deltaLow << "\t"
           << deltaHigh << "\t"
           << coreLow << "\t"
@@ -275,7 +295,10 @@ void fit_ztar_peaks_from_replay(
       cout << "Run " << rf.run
            << " znom " << znom
            << " mean " << mean
+           << " mean_err " << mean_err
            << " sigma " << sigma
+           << " sigma_err " << sigma_err
+           << " chi2/ndf " << chi2_ndf
            << " residual " << mean - znom
            << endl;
 
